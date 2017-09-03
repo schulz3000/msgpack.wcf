@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net35;net40;net45;net451;netstandard1.1</TargetFrameworks>
+    <Authors>schulz3000</Authors>
+    <Company />
+    <Description>msgpack-cli based serializer for WCF</Description>
+    <Copyright>schulz3000</Copyright>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/schulz3000/msgpack.wcf/develop/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/schulz3000/msgpack.wcf</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/schulz3000/msgpack.wcf</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>msgpack, WCF</PackageTags>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>MsgPack.Wcf.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MsgPack.Cli" Version="0.9.1" /> 
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
+    <DefineConstants>$(DefineConstants);COREFX</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net35|AnyCPU'">
+    <DocumentationFile>bin\Debug\net35\MsgPack.Wcf.xml</DocumentationFile>
+  </PropertyGroup>  
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.1'">
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.Serialization" />    
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netstandard1.1'">
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>
