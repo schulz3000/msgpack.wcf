@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MsgPack.Wcf.Core\MsgPack.Wcf.csproj" />
+    <ProjectReference Include="..\MsgPack.Wcf\MsgPack.Wcf.csproj" />
   </ItemGroup>
 
   <ItemGroup>
