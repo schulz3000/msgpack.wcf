@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ServiceModel;
 
 namespace MsgPack.Wcf.SampleHost
 {
@@ -10,15 +9,15 @@ namespace MsgPack.Wcf.SampleHost
         {
             var list = new List<CompositeType>();
             for (int i = 0; i < 10; i++)
+            {
                 list.Add(composite);
+            }
 
-            return list;           
+            return list;
         }
 
         public string GetData(int value)
-        {
-            return string.Format("You entered: {0}", value);
-        }
+            => $"You entered: {value}";
 
         public CompositeType GetDataUsingDataContract(CompositeType composite)
         {
@@ -26,10 +25,12 @@ namespace MsgPack.Wcf.SampleHost
             {
                 throw new ArgumentNullException(nameof(composite));
             }
+
             if (composite.BoolValue)
             {
                 composite.StringValue += "Suffix";
             }
+
             return composite;
         }
     }

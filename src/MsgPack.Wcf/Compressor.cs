@@ -3,20 +3,17 @@ using System.IO.Compression;
 
 namespace MsgPack.Wcf
 {
-    static class Compressor
+    internal static class Compressor
     {
         public static byte[] Compress(Stream inputStream)
         {
             inputStream.Position = 0;
-            using (var zipms = new MemoryStream())
-            {
-                using (var gzip = new GZipStream(zipms, CompressionMode.Compress))
-                {
-                    inputStream.CopyTo(gzip);
-                }
+            using var zipms = new MemoryStream();
+            using var gzip = new GZipStream(zipms, CompressionMode.Compress);
 
-                return zipms.ToArray();
-            }
+            inputStream.CopyTo(gzip);
+
+            return zipms.ToArray();
         }
 
         public static Stream Decompress(Stream inputStream)
@@ -24,10 +21,9 @@ namespace MsgPack.Wcf
             inputStream.Position = 0;
             var zipms = new MemoryStream();
 
-            using (var gzip = new GZipStream(inputStream, CompressionMode.Decompress))
-            {
-                gzip.CopyTo(zipms);
-            }
+            using var gzip = new GZipStream(inputStream, CompressionMode.Decompress);
+
+            gzip.CopyTo(zipms);
             zipms.Position = 0;
 
             return zipms;

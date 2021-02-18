@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace MsgPack.Wcf.Core.SampleClient
 {
-    static class Program
+    internal static class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var client = new ServiceClient();
             client.Endpoint.EndpointBehaviors.Add(new MsgPackEndpointBehavior());

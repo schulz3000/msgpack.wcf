@@ -6,9 +6,9 @@ using System.Xml;
 
 namespace MsgPack.Wcf
 {
-    class XmlMsgPackSerializer : XmlObjectSerializer
+    internal class XmlMsgPackSerializer : XmlObjectSerializer
     {
-        readonly Type TargetType;
+        private readonly Type targetType;
 
         /// <summary>
         /// Attempt to create a new serializer for the given model and type
@@ -16,9 +16,7 @@ namespace MsgPack.Wcf
         /// <param name="type"></param>
         /// <returns>A new serializer instance if the type is recognised by the model; null otherwise</returns>
         public static XmlMsgPackSerializer Create(Type type)
-        {
-            return new XmlMsgPackSerializer(type);
-        }
+            => new XmlMsgPackSerializer(type);
 
         /// <summary>
         /// Creates a new serializer for the given model and type
@@ -26,17 +24,19 @@ namespace MsgPack.Wcf
         /// <param name="type"></param>
         public XmlMsgPackSerializer(Type type)
         {
-            TargetType = type ?? throw new ArgumentOutOfRangeException(nameof(type));
+            targetType = type ?? throw new ArgumentOutOfRangeException(nameof(type));
         }
 
         /// <summary>
         /// Ends an object in the output
         /// </summary>
         /// <param name="writer"></param>
-        public override void WriteEndObject(System.Xml.XmlDictionaryWriter writer)
+        public override void WriteEndObject(XmlDictionaryWriter writer)
         {
             if (writer == null)
+            {
                 throw new ArgumentNullException(nameof(writer));
+            }
 
             writer.WriteEndElement();
         }
@@ -48,13 +48,15 @@ namespace MsgPack.Wcf
         public override void WriteStartObject(XmlDictionaryWriter writer, object graph)
         {
             if (writer == null)
+            {
                 throw new ArgumentNullException(nameof(writer));
+            }
 
             writer.WriteStartElement(MSGPACK_ELEMENT);
         }
 
-        const string MSGPACK_ELEMENT = "msgpack";
-        const string COMPRESS_ATTRIBUTE_NAME = "cmp";
+        private const string MSGPACK_ELEMENT = "msgpack";
+        private const string COMPRESS_ATTRIBUTE_NAME = "cmp";
 
         /// <summary>
         /// Writes the body of an object in the output
@@ -64,32 +66,32 @@ namespace MsgPack.Wcf
         public override void WriteObjectContent(XmlDictionaryWriter writer, object graph)
         {
             if (writer == null)
+            {
                 throw new ArgumentNullException(nameof(writer));
+            }
 
             if (graph == null)
             {
-                writer.WriteAttributeString("nil", "true");
+                writer.WriteAttributeString("nil", bool.TrueString);
             }
             else
             {
-                using (var ms = new MemoryStream())
+                using var ms = new MemoryStream();
+                byte[] buffer;
+                var serializer = MessagePackSerializer.Get(targetType);
+                serializer.Pack(ms, graph);
+
+                if (ms.Length > 150)
                 {
-                    byte[] buffer;
-                    var serializer = MessagePackSerializer.Get(TargetType);
-                    serializer.Pack(ms, graph);
-
-                    if (ms.Length > 150)
-                    {
-                        buffer = Compressor.Compress(ms);
-                        writer.WriteAttributeString(COMPRESS_ATTRIBUTE_NAME, "1");
-                    }
-                    else
-                    {
-                        buffer = ms.ToArray();
-                    }
-
-                    writer.WriteBase64(buffer, 0, buffer.Length);
+                    buffer = Compressor.Compress(ms);
+                    writer.WriteAttributeString(COMPRESS_ATTRIBUTE_NAME, "1");
                 }
+                else
+                {
+                    buffer = ms.ToArray();
+                }
+
+                writer.WriteBase64(buffer, 0, buffer.Length);
             }
         }
 
@@ -100,7 +102,9 @@ namespace MsgPack.Wcf
         public override bool IsStartObject(XmlDictionaryReader reader)
         {
             if (reader == null)
+            {
                 throw new ArgumentNullException(nameof(reader));
+            }
 
             reader.MoveToContent();
 
@@ -116,14 +120,16 @@ namespace MsgPack.Wcf
         public override object ReadObject(XmlDictionaryReader reader, bool verifyObjectName)
         {
             if (reader == null)
+            {
                 throw new ArgumentNullException(nameof(reader));
+            }
 
             var isCompressed = "1".Equals(reader.GetAttribute(COMPRESS_ATTRIBUTE_NAME), StringComparison.Ordinal);
 
             reader.MoveToContent();
 
             bool isSelfClosed = reader.IsEmptyElement;
-            bool isNil = "true".Equals(reader.GetAttribute("nil"), StringComparison.Ordinal);
+            bool isNil = bool.TrueString.Equals(reader.GetAttribute("nil"), StringComparison.Ordinal);
 
             reader.ReadStartElement(MSGPACK_ELEMENT);
 
@@ -131,35 +137,34 @@ namespace MsgPack.Wcf
             if (isNil)
             {
                 if (!isSelfClosed)
+                {
                     reader.ReadEndElement();
+                }
+
                 return null;
             }
 
-            var serializer = MessagePackSerializer.Get(TargetType);
+            var serializer = MessagePackSerializer.Get(targetType);
 
             if (isSelfClosed) // no real content
             {
                 return serializer.Unpack(Stream.Null);
             }
 
-            using (var ms = new MemoryStream(reader.ReadContentAsBase64()))
+            using var ms = new MemoryStream(reader.ReadContentAsBase64());
+            try
             {
-                try
+                if (isCompressed)
                 {
-                    if (isCompressed)
-                    {
-                        using (var unzip = Compressor.Decompress(ms))
-                        {
-                            return serializer.Unpack(unzip);
-                        }
-                    }
+                    using var unzip = Compressor.Decompress(ms);
+                    return serializer.Unpack(unzip);
+                }
 
-                    return serializer.Unpack(ms);
-                }
-                finally
-                {
-                    reader.ReadEndElement();
-                }
+                return serializer.Unpack(ms);
+            }
+            finally
+            {
+                reader.ReadEndElement();
             }
         }
     }

@@ -4,7 +4,7 @@ using System.ServiceModel;
 
 namespace MsgPack.Wcf.SampleHost
 {
-    [ServiceContract]   
+    [ServiceContract]
     public interface IService
     {
         [OperationContract]

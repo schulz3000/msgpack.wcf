@@ -1,7 +1,6 @@
 ﻿using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
-using System;
 #if COREFX
 using System.Linq;
 #endif
@@ -15,20 +14,16 @@ namespace MsgPack.Wcf
         }
 
         void IEndpointBehavior.ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
-        {
-            ReplaceDataContractSerializerOperationBehavior(endpoint);
-        }
+            => ReplaceDataContractSerializerOperationBehavior(endpoint);
 
         void IEndpointBehavior.ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
-        {
-            ReplaceDataContractSerializerOperationBehavior(endpoint);
-        }
+            => ReplaceDataContractSerializerOperationBehavior(endpoint);
 
         void IEndpointBehavior.Validate(ServiceEndpoint endpoint)
         {
         }
 
-        static void ReplaceDataContractSerializerOperationBehavior(ServiceEndpoint serviceEndpoint)
+        private static void ReplaceDataContractSerializerOperationBehavior(ServiceEndpoint serviceEndpoint)
         {
             foreach (OperationDescription operationDescription in serviceEndpoint.Contract.Operations)
             {
@@ -37,7 +32,7 @@ namespace MsgPack.Wcf
         }
 
 #if COREFX
-        static void ReplaceDataContractSerializerOperationBehavior(OperationDescription description)
+        private static void ReplaceDataContractSerializerOperationBehavior(OperationDescription description)
         {
             var dcsOperationBehavior = (DataContractSerializerOperationBehavior)description.OperationBehaviors[typeof(DataContractSerializerOperationBehavior)];
 
@@ -51,7 +46,7 @@ namespace MsgPack.Wcf
             }
         }
 #else
-        static void ReplaceDataContractSerializerOperationBehavior(OperationDescription description)
+        private static void ReplaceDataContractSerializerOperationBehavior(OperationDescription description)
         {
             var dcsOperationBehavior = description.Behaviors.Find<DataContractSerializerOperationBehavior>();
 

@@ -3,9 +3,9 @@ using MsgPack.Wcf.Classic.SampleClient.ServiceReference;
 
 namespace MsgPack.Wcf.SampleClient
 {
-    static class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var client = new ServiceClient();
             client.Endpoint.EndpointBehaviors.Add(new MsgPackEndpointBehavior());

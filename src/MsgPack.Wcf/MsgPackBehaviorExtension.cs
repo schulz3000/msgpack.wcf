@@ -12,7 +12,7 @@ namespace MsgPack.Wcf
     {
         /// <summary>
         /// Gets the type of behavior.
-        /// </summary>     
+        /// </summary>
         public override Type BehaviorType => typeof(MsgPackEndpointBehavior);
 
         /// <summary>
