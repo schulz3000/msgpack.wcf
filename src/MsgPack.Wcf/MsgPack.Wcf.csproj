@@ -16,6 +16,7 @@
     <AssemblyOriginatorKeyFile>MsgPack.Wcf.snk</AssemblyOriginatorKeyFile>
 	<LangVersion>8.0</LangVersion>
 	<FrameworkPathOverride Condition="'$(TargetFramework)' == 'net35'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
+	<AutomaticallyUseReferenceAssemblyPackages Condition=" '$(TargetFramework)' == 'net35' ">false</AutomaticallyUseReferenceAssemblyPackages>
   </PropertyGroup>
 
   <ItemGroup>
