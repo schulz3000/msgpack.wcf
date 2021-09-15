@@ -1,0 +1,23 @@
+name: .NET
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
+    - name: Add Nuget
+      uses: nuget/setup-nuget@v1
+    - name: Restore dependencies
+      run: nuget restore src/MsgPack.Wcf.sln
+    - name: Build Solution
+      run: msbuild.exe src/MsgPack.Wcf.sln /p:platform="Any CPU" /p:configuration="Release"
