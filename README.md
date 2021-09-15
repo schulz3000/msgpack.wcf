@@ -5,6 +5,7 @@ based on Marc Gravell protobuf-net ServiceModel code
 
 ## Builds
 [![Build status](https://ci.appveyor.com/api/projects/status/j9xtqt6huf2d57ky/branch/develop?svg=true)](https://ci.appveyor.com/project/schulz3000/msgpack-wcf/branch/develop)
+[![.NET](https://github.com/schulz3000/msgpack.wcf/actions/workflows/dotnet.yml/badge.svg)](https://github.com/schulz3000/msgpack.wcf/actions/workflows/dotnet.yml)
 
 ## Nuget
 [![deepstreamNet](https://img.shields.io/nuget/v/msgpack.wcf.svg?style=flat)](https://www.nuget.org/packages/msgpack.wcf)
