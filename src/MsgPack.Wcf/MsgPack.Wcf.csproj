@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;net451;netstandard1.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net45;net46;netstandard1.1;netstandard1.3;netstandard2.0</TargetFrameworks>
     <Authors>schulz3000</Authors>
     <Company />
     <Description>msgpack-cli based serializer for WCF</Description>
@@ -13,13 +13,17 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>MsgPack.Wcf.snk</AssemblyOriginatorKeyFile>
-	<LangVersion>8.0</LangVersion>
+	<LangVersion>9.0</LangVersion>
 	<FrameworkPathOverride Condition="'$(TargetFramework)' == 'net35'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
 	<AutomaticallyUseReferenceAssemblyPackages Condition=" '$(TargetFramework)' == 'net35' ">false</AutomaticallyUseReferenceAssemblyPackages>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<PackageLicenseExpression>Apache</PackageLicenseExpression>
+	<PackageLicenseExpression></PackageLicenseExpression>
 	<EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard1.3'">
+		<NetStandardImplicitPackageVersion>2.0.3</NetStandardImplicitPackageVersion>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MsgPack.Cli" Version="1.0.1" /> 
@@ -29,19 +33,19 @@
     <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
     <DefineConstants>$(DefineConstants);COREFX</DefineConstants>
   </PropertyGroup> 
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1' OR '$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
   	<PackageReference Include="NETStandard.Library" Version="2.0.3" />
-  </ItemGroup>
+  </ItemGroup>-->
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.1' AND '$(TargetFramework)' != 'netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'netstandard1.1' AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard2.0'">
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.ServiceModel" />
@@ -49,7 +53,7 @@
     <Reference Include="System.Runtime.Serialization" />    
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netstandard1.1' AND '$(TargetFramework)' != 'netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'netstandard1.1'  AND '$(TargetFramework)' != 'netstandard1.3' AND '$(TargetFramework)' != 'netstandard2.0'">
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 

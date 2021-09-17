@@ -1,4 +1,4 @@
-name: .NET
+name: .NET Core
 
 on:
   push:
@@ -21,9 +21,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Restore dependencies
+    - name: Restore Classic dependencies
       run: dotnet restore src/MsgPack.Wcf
-    - name: Build
+    - name: Build Classic
       run: dotnet build src/MsgPack.Wcf -c Release --no-restore
+    - name: Restore Core dependencies
+      run: dotnet restore src/MsgPack.CoreWcf
+    - name: Build Core
+      run: dotnet build src/MsgPack.CoreWcf -c Release --no-restore
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal
