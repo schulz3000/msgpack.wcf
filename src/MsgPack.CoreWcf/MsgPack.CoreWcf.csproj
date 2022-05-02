@@ -18,7 +18,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CoreWCF.Primitives" Version="0.4.0" />
+		<PackageReference Include="CoreWCF.Primitives" Version="1.0.0" />
 		<PackageReference Include="MsgPack.Cli" Version="1.0.1" />
 	</ItemGroup>
 
